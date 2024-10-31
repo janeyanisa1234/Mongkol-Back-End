@@ -1,11 +1,25 @@
-const express = require('express');
-const cors = require('cors'); // Import cors
-const app = express();
+const express = require('express')
+const bodyParser=require('body-parser')
+const app = express()
 const port = 5000;
 
-app.use(cors()); // Enable CORS for all routes
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended:false}))
 
-// Define the color mapping and table data
+app.use((req,res,next)=>{
+  res.setHeader("Access-Control-Allow-Origin","*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requwsted-with, Content-type,Accept,Authorization",
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT,DELETE"
+  )
+  next();
+});
+app.use(express.json())
+
 const colorMapping = {
   'ทุกโทนแดง': '#951519',
   'ทุกโทนเขียว': '#21723E',
@@ -104,11 +118,19 @@ const tableData = {
   }
 };
 
-// Set up the route to send table data
-app.get('/tableData', (req, res) => {
-  res.json({ colorMapping, tableData });
+app.get('/', (req, res) => {
+  res.send('Hello World!');
 });
 
+app.get('/tableData', (req, res) => {
+  if (Object.keys(colorMapping).length > 0 || Object.keys(tableData).length > 0) {
+    res.json({ colorMapping, tableData });
+  } else {
+    res.status(404).send("No data found");
+  }
+});
+
+
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  console.log(`Example app listening on port ${port}`);
 });
