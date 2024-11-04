@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const { MongoClient } = require('mongodb');
 
 const app = express();
-const port = 5001;
+const port = 5002;
 
 // MongoDB URI and client setup
 const uri = "mongodb+srv://jxaxhsirilux:Mongkol2567@mongkol-database.ch4vi.mongodb.net/";
