@@ -10,6 +10,7 @@ const uri = "mongodb+srv://jxaxhsirilux:Mongkol2567@mongkol-database.ch4vi.mongo
 const client = new MongoClient(uri);
 let db;
 
+
 // Function to connect to MongoDB
 async function connectDB() {
   try {
