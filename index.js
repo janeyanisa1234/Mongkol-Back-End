@@ -160,6 +160,66 @@ app.get('/data', async (req, res) => {
   }
 });
 
+// Route to insert data into MongoDB
+app.post('/insert', async (req, res) => {
+  try {
+    const collection = db.collection('Crud');
+    const newData = req.body; // รับข้อมูลจาก request body
+
+    // Insert data into MongoDB collection
+    await collection.insertOne(newData);
+
+    res.status(201).send("Data inserted successfully");
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+const { ObjectId } = require('mongodb'); // Import ObjectId for MongoDB _id field
+
+// Route to update data in MongoDB
+app.put('/update/:id', async (req, res) => {
+  try {
+    const collection = db.collection('Crud');
+    const id = req.params.id;
+    const newData = req.body;
+
+    // Update document by ID
+    const result = await collection.updateOne(
+      { _id: new ObjectId(id) }, // Filter by _id
+      { $set: newData } // Update with new data
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).send("No data found to update");
+    }
+
+    res.send("Data updated successfully");
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+// Route to delete data in MongoDB
+app.delete('/delete/:id', async (req, res) => {
+  try {
+    const collection = db.collection('Crud');
+    const id = req.params.id;
+
+    // Delete document by ID
+    const result = await collection.deleteOne({ _id: new ObjectId(id) });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).send("No data found to delete");
+    }
+
+    res.send("Data deleted successfully");
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+
 // Start server and connect to MongoDB
 app.listen(port, async () => {
   await connectDB();
